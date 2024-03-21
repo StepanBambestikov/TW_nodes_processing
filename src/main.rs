@@ -15,6 +15,7 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     let json_file_name = args[1].clone();
     let stem_size = args[2].clone().to_owned();
+    let i_stem_size = stem_size.parse::<i32>().unwrap();
     let file_names: Vec<String> = args.iter().skip(3).cloned().collect();
     let organism_names = get_organism_names(file_names.clone(), json_file_name);
     let genome_number = file_names.len();
@@ -23,7 +24,7 @@ fn main() {
     print!("processing begin/n");
     for current_genome_index in 0..genome_number{
         print!("{}/n", current_genome_index);
-        let current_genome = genome::new(&file_names[current_genome_index]);
+        let current_genome = genome::new(&file_names[current_genome_index], i_stem_size);
         current_genome.save_to_file();
         for (current_sequence, repetition_number) in current_genome{
             genome_heap.add_sequence((current_sequence, repetition_number), current_genome_index);

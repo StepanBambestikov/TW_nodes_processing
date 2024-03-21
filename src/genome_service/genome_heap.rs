@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-use crate::genome_service::harpin_filter;
 
 pub(crate) struct GenomeHeap<'a> {
     unique_count: HashMap<String, Vec<usize>>,

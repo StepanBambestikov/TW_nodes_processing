@@ -14,7 +14,7 @@ fn maker_inverse_comp_sequence(seq: &str) -> String{
     rev_comp_seq
 }
 
-pub(crate) fn check_if_sequence_is_harpin(sequence: &String) -> bool{
+pub(crate) fn check_if_sequence_is_harpin(sequence: &String, stem_size: i32) -> bool{
     let mut current_index = 8;
     while current_index < sequence.len() - 8{
         let mut distance = 0;
@@ -38,7 +38,7 @@ pub(crate) fn check_if_sequence_is_harpin(sequence: &String) -> bool{
                 max_consecutive_count = current_consecutive_count;
             }
         }
-        if max_consecutive_count >= 8 {
+        if (stem_size > 10 && max_consecutive_count > stem_size + 3) || max_consecutive_count > stem_size + 2{
             return true
         }
         current_index += 1;

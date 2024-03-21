@@ -12,14 +12,15 @@ pub(crate) struct HashGenome{
     file_name: String,
     filtered_file: File,
     filtered_coords_file: File,
+    stem_size: i32
 }
 
-pub(crate) fn new(file_name: &str) -> HashGenome{
+pub(crate) fn new(file_name: &str, stem_size: i32) -> HashGenome{
     let file_content = fs::read_to_string(file_name).expect("Unable to read file");
     //output files creation
-    let mut filtered_file = File::create(format!("{file_name}_results/{file_name}_filtered.txt"))
+    let filtered_file = File::create(format!("{file_name}_results/{file_name}_filtered.txt"))
         .expect("Unable to create filtered file for saving");
-    let mut filtered_coords_file = File::create(format!("{file_name}_results/{file_name}_filtered_coords.txt"))
+    let filtered_coords_file = File::create(format!("{file_name}_results/{file_name}_filtered_coords.txt"))
         .expect("Unable to create filtered coords file for saving");
 
     filtered_file.set_len(0)
@@ -33,7 +34,8 @@ pub(crate) fn new(file_name: &str) -> HashGenome{
         print_values_count: 1000,
         file_name: file_name.parse().unwrap(),
         filtered_file,
-        filtered_coords_file
+        filtered_coords_file,
+        stem_size
     };
 
     //file processing
@@ -81,7 +83,7 @@ impl HashGenome{
 
     fn process_line_block(&mut self, line_block: (String, String)){
         //check harping filter
-        let sequence_is_harpin = crate::genome_service::harpin_filter::check_if_sequence_is_harpin(&line_block.1);
+        let sequence_is_harpin = crate::genome_service::harpin_filter::check_if_sequence_is_harpin(&line_block.1, self.stem_size);
         if sequence_is_harpin{
             return
         }
@@ -113,7 +115,7 @@ mod tests {
     #[test]
     fn test_one_file_processing() {
         let file_name = "GCF_000001405.40_GRCh38.p14_genomic.fna_12_0_nodes_new.txt";
-        let current_genome = genome::new(&file_name);
+        let current_genome = genome::new(&file_name, 5);
         current_genome.save_to_file();
     }
 
